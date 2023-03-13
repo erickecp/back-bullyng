@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Pregunta } from '../../pregunta/entities/pregunta.entity';
 @Entity('encuesta')
 export class Encuesta {
     @PrimaryGeneratedColumn()
@@ -20,6 +21,9 @@ export class Encuesta {
         default: true
     })
     isActive: boolean;
+    
+    @OneToMany(() => Pregunta, pregunta => pregunta.encuesta)
+    preguntas: Pregunta[];
 
 
 
