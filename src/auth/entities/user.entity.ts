@@ -16,6 +16,19 @@ export class User {
     @Column('text')
     fullName: string;
 
+    @Column('text')
+    sexo: string;
+
+    @Column('int')
+    edad: number;
+
+    @Column('text')
+    poblacion: string;
+
+    @Column('text')
+    instituto: string;
+    
+
     @Column('bool', {
         default: true
     })
