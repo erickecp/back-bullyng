@@ -9,6 +9,7 @@ import { RoleProtected } from './decorators/role-protected.decorator';
 import { ValidRoles } from './interfaces/validroles.interface';
 import { UserRoleGuard } from './guards/user-role.guard';
 import { Auth } from './decorators/auth.decorator';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +39,30 @@ export class AuthController {
       userEmail
     };
   }
+
+  @Get('all')
+  // @Auth(ValidRoles.user)
+  getAll(
+  ) {
+    return this.authService.getAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.authService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAuthDto: UpdateUserDto) {
+    return this.authService.update(id, updateAuthDto);
+  }
+  
+  @Patch('active/:id')
+  remove(@Param('id') id: string) {
+    return this.authService.remove(id);
+  } 
+
+
 
   @Get('private2')
   @RoleProtected(ValidRoles.superAdmin)

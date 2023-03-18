@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Pregunta } from '../../pregunta/entities/pregunta.entity';
+import { Video } from 'src/video/entities/video.entity';
 @Entity('encuesta')
 export class Encuesta {
     @PrimaryGeneratedColumn()
@@ -24,6 +25,11 @@ export class Encuesta {
     
     @OneToMany(() => Pregunta, pregunta => pregunta.encuesta)
     preguntas: Pregunta[];
+
+      
+    @OneToMany(() => Video, video => video.encuesta)
+    videos: Video[];
+
 
 
 

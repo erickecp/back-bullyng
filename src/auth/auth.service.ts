@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt'
 import { LoginUSerDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { jwtPayl } from './interfaces/jwtpkensito.interface';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -28,9 +29,10 @@ export class AuthService {
   async create(createAuthDto: CreateUserDto) {
     try {
 
-      const {password, ...userData} = createAuthDto
+      const {password, roles, ...userData} = createAuthDto
 
       const user = this.userRepository.create({
+        roles: [`${roles}`],
         ...userData,
         password: bcrypt.hashSync(password, 10)
       });
@@ -62,7 +64,7 @@ export class AuthService {
 
     const userFind = await this.userRepository.findOne({
       where :{ email },
-      select: {email: true, password: true, id: true}
+      select: {email: true, password: true, fullName: true, id: true, sexo: true, poblacion:true, instituto:true, roles: true }
     })
 
     if(!userFind) 
@@ -71,6 +73,7 @@ export class AuthService {
     if(!bcrypt.compareSync(password, userFind.password))
       throw new UnauthorizedException('Las crdenciales no son validas');
 
+    delete(userFind.password); 
     return {
       ...userFind,
       token: this.getJWToken({id: userFind.id, fullName: userFind.fullName})
@@ -115,5 +118,84 @@ export class AuthService {
     return token;
 
   }
+
+
+  /*
+  .##.....##..######..##.....##....###....########..####..#######...######.
+  .##.....##.##....##.##.....##...##.##...##.....##..##..##.....##.##....##
+  .##.....##.##.......##.....##..##...##..##.....##..##..##.....##.##......
+  .##.....##..######..##.....##.##.....##.########...##..##.....##..######.
+  .##.....##.......##.##.....##.#########.##...##....##..##.....##.......##
+  .##.....##.##....##.##.....##.##.....##.##....##...##..##.....##.##....##
+  ..#######...######...#######..##.....##.##.....##.####..#######...######.
+  */
+
+  async getAll(){
+    const users = await this.userRepository.find(
+      {
+        where: {
+          isActive: true
+        }
+      }
+    );
+    return users;
+  }
+
+
+  /*
+  .########.####.##....##.########...#######..##....##.########
+  .##........##..###...##.##.....##.##.....##.###...##.##......
+  .##........##..####..##.##.....##.##.....##.####..##.##......
+  .######....##..##.##.##.##.....##.##.....##.##.##.##.######..
+  .##........##..##..####.##.....##.##.....##.##..####.##......
+  .##........##..##...###.##.....##.##.....##.##...###.##......
+  .##.......####.##....##.########...#######..##....##.########
+  */
+
+  async findOne(id: any){
+    
+    const user = await this.userRepository.findOne(
+      {
+        where: {
+          id: id
+        }
+      }
+    );
+    if(!user){
+      return null;
+    }
+    return user;
+  }
+
+
+  async update(id: string, body: UpdateUserDto ){
+    const user = await this.findOne(id);
+    if(!user)
+    {
+      throw new BadRequestException('El usuario no existe');
+    }
+
+    await this.userRepository.update(id, body);
+    const userUpd = this.userRepository.findOne(
+      {
+        where: {
+          id
+        }
+      }
+    );
+    return userUpd;
+  }
+
+  async remove(id: string){
+    const user = await this.findOne(id);
+    if(!user){
+      throw new BadRequestException('El usuario no existe');
+    }
+    await this.userRepository.update(id, {
+      isActive: false
+    });
+
+  }
+
 
 }

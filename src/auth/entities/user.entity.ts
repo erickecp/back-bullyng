@@ -17,16 +17,22 @@ export class User {
     fullName: string;
 
     @Column('text')
-    sexo: string;
+    sexo?: string;
 
-    @Column('int')
-    edad: number;
+    @Column('int', {
+        nullable: true
+    })
+    edad?: number;
 
-    @Column('text')
-    poblacion: string;
+    @Column('text', {
+        nullable: true
+    })
+    poblacion?: string;
 
-    @Column('text')
-    instituto: string;
+    @Column('text', {
+        nullable: true
+    })
+    instituto?: string;
     
 
     @Column('bool', {
