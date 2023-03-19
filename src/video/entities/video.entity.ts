@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Pregunta } from '../../pregunta/entities/pregunta.entity';
-import { Encuesta } from 'src/encuesta/entities/encuesta.entity';
+import { Encuesta } from '../../encuesta/entities/encuesta.entity';
 @Entity('video')
 export class Video {
     @PrimaryGeneratedColumn()
