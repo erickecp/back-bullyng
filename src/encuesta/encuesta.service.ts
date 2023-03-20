@@ -22,7 +22,8 @@ export class EncuestaService {
 
   findAll() {
     const encuestas = this.encuestaRepository.find({
-      where: { isActive: true }
+      where: { isActive: true },
+      relations: ['preguntas', 'videos']
     }
     );
     return encuestas;
@@ -33,7 +34,8 @@ export class EncuestaService {
       {
         where: {
           id
-        }
+        },
+        relations: ['preguntas', 'videos']
       }
     );
 

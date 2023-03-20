@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Pregunta } from '../../pregunta/entities/pregunta.entity';
-import { Video } from 'src/video/entities/video.entity';
+import { Video } from '../../video/entities/video.entity';
 @Entity('encuesta')
 export class Encuesta {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id?: number;
 
     @Column({

@@ -17,6 +17,7 @@ export class UpdateUserDto {
     sexo: string;
     @IsNumber()
     edad: number;
+    roles: string[]
     
     
 }

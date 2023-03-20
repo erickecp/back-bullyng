@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException, Body } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { LoginUSerDto } from './dto/login-user.dto';
@@ -169,13 +169,15 @@ export class AuthService {
 
 
   async update(id: string, body: UpdateUserDto ){
+    const bodys ={...body, roles: body.roles};
+    console.log('body', body)
     const user = await this.findOne(id);
     if(!user)
     {
       throw new BadRequestException('El usuario no existe');
     }
 
-    await this.userRepository.update(id, body);
+    await this.userRepository.update(id, bodys);
     const userUpd = this.userRepository.findOne(
       {
         where: {
@@ -197,5 +199,26 @@ export class AuthService {
 
   }
 
+  /*
+  ..######..########....###....########...######..##.....##
+  .##....##.##.........##.##...##.....##.##....##.##.....##
+  .##.......##........##...##..##.....##.##.......##.....##
+  ..######..######...##.....##.########..##.......#########
+  .......##.##.......#########.##...##...##.......##.....##
+  .##....##.##.......##.....##.##....##..##....##.##.....##
+  ..######..########.##.....##.##.....##..######..##.....##
+  */
+
+
+  async search(term: string){
+    const users = await this.userRepository.find(
+      {
+        where: {
+          fullName: Like(`%${term}%`),
+        }
+      }
+    );
+    return users;
+  }
 
 }

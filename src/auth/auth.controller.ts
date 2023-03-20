@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch,Put, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { AuthGuard} from '@nestjs/passport'
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -46,13 +46,18 @@ export class AuthController {
   ) {
     return this.authService.getAll();
   }
+  
+  @Get('search')
+  search(@Query('term') term: string) {
+    return this.authService.search(term);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.authService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateAuthDto: UpdateUserDto) {
     return this.authService.update(id, updateAuthDto);
   }
